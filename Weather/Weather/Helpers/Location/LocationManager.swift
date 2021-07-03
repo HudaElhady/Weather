@@ -7,18 +7,16 @@
 
 import CoreLocation
 
-//class LocationManager {
-//    static var manager: LocationManagerHelper = LocationManagerHelper()
-//}
-
 class LocationManager: NSObject, CLLocationManagerDelegate {
     
     private var locationManager = CLLocationManager()
-    @objc dynamic var currentLocation: CLLocation?
-    @objc dynamic var isLocationEnabled = false
+    private var didUpdateLocation: ((CLLocation) -> ())?
+    private var locationDenied: (() -> ())?
     
     
-    func initLocationManager() {
+    func initLocationManager(didUpdateLocation: @escaping (CLLocation) -> (), locationDenied: @escaping () -> ()) {
+        self.didUpdateLocation = didUpdateLocation
+        self.locationDenied = locationDenied
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
@@ -29,7 +27,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         guard let location = locations.last else {
             return
         }
-        currentLocation = location
+        didUpdateLocation?(location)
         manager.delegate = nil
     }
     
@@ -37,12 +35,11 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .denied, .restricted:
-            isLocationEnabled = false
+            locationDenied?()
         case .notDetermined:
             print("Location status not determined.")
         case .authorizedAlways, .authorizedWhenInUse:
             print("Location status is OK.")
-            isLocationEnabled = true
             locationManager.startUpdatingLocation()
         }
     }
