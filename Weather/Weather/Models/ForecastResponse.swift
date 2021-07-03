@@ -33,7 +33,7 @@ struct Daily : Codable {
     let moonPhase : Float?
     let moonrise : Int?
     let moonset : Int?
-    let pop : Int?
+    let pop : Float?
     let pressure : Int?
     let sunrise : Int?
     let sunset : Int?

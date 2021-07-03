@@ -8,26 +8,43 @@
 import UIKit
 
 class MainViewController: UIViewController {
+    
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchView: UIView!
     
     private var viewModel: MainViewModel!
     private var cities = [HomeCity]()
+    private var searchController: UISearchController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        LocationManager.manager.initLocationManager()
         viewModel = MainViewModel()
         viewModel.getCurrentCity()
         setupObservables()
     }
-    func setupObservables() {
-        viewModel.city.bind { [weak self](city) in
-            self?.cities.append(city)
-            self?.tableView.reloadData()
-        }
-        
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = true
     }
     
+    private func setupObservables() {
+        viewModel.city.bind { [weak self](city) in
+            self?.updateDataSource(city: city)
+        }
+    }
+    
+    private func updateDataSource(city: HomeCity){
+        cities.append(city)
+        tableView.reloadData()
+    }
+    
+    @IBAction func openSearch(_ sender: UIButton) {
+        let vc = SearchViewController.create { [weak self] in
+            self?.updateDataSource(city: $0)
+        }
+        self.present(vc!, animated: true, completion: nil)
+    }
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {

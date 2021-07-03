@@ -9,8 +9,7 @@ import Foundation
 
 class DateManager {
     static func convertToDateString(_ dateInt: Int, format: String = "yyyy-MM-dd") -> String {
-        let time = TimeInterval(dateInt) / 1000
-        let date = Date(timeIntervalSince1970: time)
+        let date = Date(timeIntervalSince1970: Double(dateInt))
         let format = DateFormatter()
         format.dateFormat = "yyyy-MM-dd"
         return format.string(from: date)

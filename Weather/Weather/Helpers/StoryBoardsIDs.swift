@@ -17,6 +17,7 @@ enum StoryBoardsIDs: String {
 
 enum ViewControllersIDs: String {
     case forecastVC = "ForecastViewController"
+    case searchVC = "SearchViewController"
     
     var id: String {
         return self.rawValue

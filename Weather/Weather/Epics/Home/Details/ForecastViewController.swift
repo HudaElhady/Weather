@@ -21,6 +21,12 @@ class ForecastViewController: UIViewController {
         viewModel = ForecastViewModel()
         setupObservables()
         viewModel.getForecast(latitude: latitude ?? 0, longatitude: longatitude ?? 0)
+        initUI()
+    }
+    
+    func initUI()  {
+        navigationItem.title = "5-day forecast"
+        navigationController?.navigationBar.isHidden = false
     }
     
     static func create(latitude: Double, longtitude: Double) -> ForecastViewController? {

@@ -7,4 +7,12 @@
 
 import Foundation
 
+struct CityResources {
+    
+    static func cityResource(searchString: String) -> Resource<CityResponse> {
+        let urlString = Constants.Api.baseUrl + "find?q=\(searchString)&appid=\(Constants.Api.appId)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+       return Resource<CityResponse>(get: URL(string: urlString)!)
+    }
+}
+
 
