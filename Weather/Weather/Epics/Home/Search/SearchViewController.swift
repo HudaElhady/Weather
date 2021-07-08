@@ -30,7 +30,7 @@ class SearchViewController: UIViewController {
         }
         
         viewModel.errorMessage.bind { errorMessage in
-            self.alert(message: errorMessage, actions: [("OK", .cancel)])
+            self.alert(message: errorMessage, actions: [(Constants.MessagesStrings.ok, .cancel)])
         }
         
         viewModel.isLoading.bindAndFire { (isLoading) in
@@ -39,7 +39,6 @@ class SearchViewController: UIViewController {
     }
     
     func setupSearchController() {
-        searchController.searchResultsUpdater = self
         definesPresentationContext = true
         tableView.tableHeaderView = searchController.searchBar
         searchController.searchBar.tintColor = UIColor.white
@@ -56,7 +55,7 @@ class SearchViewController: UIViewController {
     
 }
 
-extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
+extension SearchViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cities.count
@@ -69,7 +68,10 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         }
         return UITableViewCell()
     }
-    
+
+}
+
+extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
@@ -81,13 +83,11 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             self.presentingViewController?.dismiss(animated: true, completion: nil)
         }
     }
-
 }
 
-extension SearchViewController: UISearchResultsUpdating, UISearchBarDelegate {
-    func updateSearchResults(for searchController: UISearchController) {
-    }
-    
+
+
+extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         viewModel.getCities(name: searchController.searchBar.text ?? "")
         searchController.searchBar.resignFirstResponder()

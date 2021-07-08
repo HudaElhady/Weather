@@ -18,4 +18,9 @@ struct Constants {
         static let longitude: Double = 2.4333
     }
     
+    struct MessagesStrings {
+        static let ok = "OK"
+        static let forecastTitle = "5-day forecast"
+    }
+    
 }

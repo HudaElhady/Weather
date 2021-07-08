@@ -25,7 +25,7 @@ class ForecastViewController: UIViewController {
     }
     
     func initUI()  {
-        navigationItem.title = "5-day forecast"
+        navigationItem.title = Constants.MessagesStrings.forecastTitle
         navigationController?.navigationBar.isHidden = false
     }
     
@@ -54,7 +54,7 @@ class ForecastViewController: UIViewController {
 
 }
 
-extension ForecastViewController: UITableViewDelegate, UITableViewDataSource {
+extension ForecastViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return forecastArr.count
@@ -68,10 +68,13 @@ extension ForecastViewController: UITableViewDelegate, UITableViewDataSource {
         return UITableViewCell()
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UIScreen.main.bounds.height / 8.5
-    }
+    
 
 }
 
+extension ForecastViewController: UITableViewDelegate{
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UIScreen.main.bounds.height / 8.5
+    }
+}
 

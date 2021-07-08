@@ -25,7 +25,7 @@ class ForecastViewModel: BaseViewModel {
             switch result {
             case .success(let response):
                 if let dailyArray = response.daily {
-                    self.forecastArr.value = dailyArray.map{DailyForecast.makeDailyForecast(from: $0)}
+                    self.forecastArr.value = (dailyArray.prefix(5).map{DailyForecast.makeDailyForecast(from: $0)})
                 }
             case .failure(let error):
                 self.errorMessage.value = error.errorMessage
