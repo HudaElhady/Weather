@@ -68,6 +68,13 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let city = cities[indexPath.row]
         navigationController?.pushViewController(ForecastViewController.create(latitude: city.lat, longtitude: city.long)!, animated: true)
     }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            cities.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+        }
+    }
 
 }
 
