@@ -77,18 +77,21 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let city = cities[indexPath.row]
         didSelectCityHandler?(city)
+        DispatchQueue.main.async {
             self.presentingViewController?.dismiss(animated: true, completion: nil)
+        }
     }
 
 }
 
 extension SearchViewController: UISearchResultsUpdating, UISearchBarDelegate {
     func updateSearchResults(for searchController: UISearchController) {
-        }
-
-        func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-            viewModel.getCities(name: searchController.searchBar.text ?? "")
-        }
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        viewModel.getCities(name: searchController.searchBar.text ?? "")
+        searchController.searchBar.resignFirstResponder()
+    }
 }
 
 

@@ -10,16 +10,35 @@ import CoreLocation
 
 class MainViewModel: BaseViewModel {
 
-    var city:Dynamic<HomeCity> = Dynamic(HomeCity())
+    var citiesList:Dynamic<[HomeCity]> = Dynamic([HomeCity]())
     var errorMessage: Dynamic<String> = Dynamic("")
     private let locationManager: LocationManager
+    private let localDBRepo: LocalDBRepo
     
     
-    
-    init(locationManager: LocationManager = LocationManager()) {
+    init(localDBRepo: LocalDBRepo = LocalDBRepoImpl(), locationManager: LocationManager = LocationManager()) {
         self.locationManager = locationManager
+        self.localDBRepo = localDBRepo
         super.init(isLoading: false)
-        setupLocation()
+    }
+    
+    func getCities() {
+        startLoading()
+        localDBRepo.getCities { [weak self](result) in
+            self?.stopLoading()
+            switch result {
+            case .success(let response):
+                if response.count > 0 {
+                    self?.citiesList.value = response
+                } else {
+                    self?.setupLocation()
+                }
+                self?.localDBRepo.deleteAllCities()
+            case .failure(let error):
+                self?.errorMessage.value = error.errorMessage
+                self?.setupLocation()
+            }
+        }
     }
     
     private func setupLocation() {
@@ -29,13 +48,13 @@ class MainViewModel: BaseViewModel {
     private func updateLocation(location: CLLocation) {
         self.locationManager.getCityName(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude) { city in
             if let city = city {
-                self.city.value = HomeCity(name: city, lat: location.coordinate.latitude, long: location.coordinate.longitude)
+                self.citiesList.value = [HomeCity(name: city, lat: location.coordinate.latitude, long: location.coordinate.longitude)]
             }
         }
     }
     
     private func locationDenied() {
-        self.city.value = HomeCity(name: "London", lat: Constants.LondonLocation.latitude, long: Constants.LondonLocation.longitude)
+        self.citiesList.value = [HomeCity(name: "London", lat: Constants.LondonLocation.latitude, long: Constants.LondonLocation.longitude)]
     }
     
 }

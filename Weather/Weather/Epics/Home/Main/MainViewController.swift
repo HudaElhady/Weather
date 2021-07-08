@@ -13,13 +13,18 @@ class MainViewController: UIViewController {
     @IBOutlet weak var searchView: UIView!
     
     private var viewModel: MainViewModel!
-    private var cities = [HomeCity]()
+    private var citiesList = [HomeCity]() {
+        didSet {
+            CommonClass.sharedInstance.updateHomeCities(list: citiesList)
+        }
+    }
     private var searchController: UISearchController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel = MainViewModel()
         setupObservables()
+        viewModel.getCities()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -28,19 +33,19 @@ class MainViewController: UIViewController {
     }
     
     private func setupObservables() {
-        viewModel.city.bind { [weak self](city) in
-            self?.updateDataSource(city: city)
+        viewModel.citiesList.bind { [weak self](cities) in
+            self?.updateDataSource(cities)
         }
     }
     
-    private func updateDataSource(city: HomeCity){
-        cities.append(city)
+    private func updateDataSource(_ cities: [HomeCity]){
+        citiesList.append(contentsOf: cities)
         tableView.reloadData()
     }
     
     @IBAction func openSearch(_ sender: UIButton) {
         let vc = SearchViewController.create { [weak self] in
-            self?.updateDataSource(city: $0)
+            self?.updateDataSource([$0])
         }
         self.present(vc!, animated: true, completion: nil)
     }
@@ -49,12 +54,12 @@ class MainViewController: UIViewController {
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cities.count
+        return citiesList.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: CityTableViewCell.identifier, for: indexPath) as? CityTableViewCell {
-            cell.configure(city: cities[indexPath.row])
+            cell.configure(city: citiesList[indexPath.row])
             return cell
         }
         return UITableViewCell()
@@ -65,13 +70,13 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let city = cities[indexPath.row]
+        let city = citiesList[indexPath.row]
         navigationController?.pushViewController(ForecastViewController.create(latitude: city.lat, longtitude: city.long)!, animated: true)
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            cities.remove(at: indexPath.row)
+            citiesList.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
         }
     }

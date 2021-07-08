@@ -25,17 +25,12 @@ class ForecastViewModel: BaseViewModel {
             switch result {
             case .success(let response):
                 if let dailyArray = response.daily {
-                    self.forecastArr.value = dailyArray.map{self.toDailyForecast($0)}
+                    self.forecastArr.value = dailyArray.map{DailyForecast.makeDailyForecast(from: $0)}
                 }
             case .failure(let error):
                 self.errorMessage.value = error.errorMessage
             }
         }
-    }
-    
-    func toDailyForecast(_ forecast: Daily) -> DailyForecast {
-        let dateString = DateManager.convertToDateString(forecast.dt ?? 0)
-        return DailyForecast(date: dateString, tempreature: "\(forecast.temp?.day ?? 0)", description: forecast.weather?[0].descriptionField ?? "")
     }
 
 }

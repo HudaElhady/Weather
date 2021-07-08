@@ -2,7 +2,7 @@
 //  LocationManager.swift
 //  Weather
 //
-//  Created by huda elhady on 02/07/2021.
+//  Created by huda elhady on 07/07/2021.
 //
 
 import CoreLocation

@@ -24,4 +24,9 @@ class DailyForecast {
         self.description = description
     }
     
+    static func makeDailyForecast(from forecast: Daily) ->  DailyForecast {
+        let dateString = DateManager.convertToDateString(forecast.dt ?? 0)
+        return DailyForecast(date: dateString, tempreature: "\(forecast.temp?.day ?? 0)", description: forecast.weather?[0].descriptionField ?? "")
+    }
+    
 }

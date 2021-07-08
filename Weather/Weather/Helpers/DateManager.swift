@@ -11,7 +11,7 @@ class DateManager {
     static func convertToDateString(_ dateInt: Int, format: String = "yyyy-MM-dd") -> String {
         let date = Date(timeIntervalSince1970: Double(dateInt))
         let format = DateFormatter()
-        format.dateFormat = "yyyy-MM-dd"
+        format.dateFormat = "dd-MM-yyyy"
         return format.string(from: date)
     }
 }

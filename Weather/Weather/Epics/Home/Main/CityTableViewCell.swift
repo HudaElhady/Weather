@@ -15,6 +15,6 @@ class CityTableViewCell: UITableViewCell {
 
     func configure(city: HomeCity) {
         cityLabel.text = city.name
-        coordinateLabel.text = "Geo coords [\(city.lat) , \(city.long)]"
+        coordinateLabel.text = "Geo coords: [\(city.lat) , \(city.long)]"
     }
 }
